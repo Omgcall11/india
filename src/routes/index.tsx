@@ -11,6 +11,7 @@ import { LanguageToggle } from "@/components/landing/LanguageToggle";
 import { PosterRail } from "@/components/landing/PosterRail";
 import { useLocale } from "@/hooks/use-locale";
 import { copy } from "@/lib/i18n";
+import { SITE_ORIGIN } from "@/lib/site";
 
 const TITLE = copy.en.metaTitle;
 const DESCRIPTION = copy.en.metaDescription;
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_ORIGIN },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

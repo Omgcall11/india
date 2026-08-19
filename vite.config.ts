@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Ubuntu VPS (nginx reverse-proxy to Node on port 3000)
+  nitro: {
+    preset: "node-server",
+  },
 });

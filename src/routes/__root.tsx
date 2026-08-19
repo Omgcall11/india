@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SITE_ORIGIN } from "../lib/site";
 
 function NotFoundComponent() {
   return (
@@ -83,6 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Lovable App" },
       { property: "og:description", content: "Lovable Generated Project" },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_ORIGIN },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
     ],
@@ -91,12 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap",
-      },
+      { rel: "canonical", href: SITE_ORIGIN },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
