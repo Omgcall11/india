@@ -11,7 +11,7 @@ import { LanguageToggle } from "@/components/landing/LanguageToggle";
 import { PosterRail } from "@/components/landing/PosterRail";
 import { useLocale } from "@/hooks/use-locale";
 import { copy } from "@/lib/i18n";
-import { SITE_ORIGIN } from "@/lib/site";
+import { OFFICIAL_WATCH_URL, SITE_ORIGIN } from "@/lib/site";
 
 const TITLE = copy.en.metaTitle;
 const DESCRIPTION = copy.en.metaDescription;
@@ -108,7 +108,8 @@ function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
-                href="#plans"
+                href={OFFICIAL_WATCH_URL}
+                rel="noopener noreferrer"
                 className="rounded-md bg-gradient-brand px-7 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
               >
                 {t.startWatching}
@@ -194,7 +195,8 @@ function Landing() {
                   ))}
                 </ul>
                 <a
-                  href="#plans"
+                  href={OFFICIAL_WATCH_URL}
+                  rel="noopener noreferrer"
                   className="mt-7 block rounded-md bg-gradient-brand px-4 py-3 text-center text-sm font-bold text-primary-foreground transition-transform hover:scale-[1.02]"
                 >
                   {t.getPremium}
