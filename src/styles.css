@@ -33,7 +33,8 @@
   --color-surface-elevated: var(--surface-elevated);
   --color-gold: var(--gold);
   --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
-  --font-sans: "Barlow", system-ui, sans-serif;
+  --font-sans: "Barlow", "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-hindi: "Noto Sans Devanagari", "Barlow", system-ui, sans-serif;
 }
 
 :root {
@@ -100,6 +101,14 @@
   h3 {
     font-family: var(--font-display);
     letter-spacing: 0.01em;
+  }
+
+  [lang="hi"] h1,
+  [lang="hi"] h2,
+  [lang="hi"] h3 {
+    font-family: var(--font-hindi);
+    letter-spacing: 0;
+    line-height: 1.25;
   }
 }
 

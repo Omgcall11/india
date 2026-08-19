@@ -5,11 +5,19 @@ type Poster = {
   badge?: string;
 };
 
-export function PosterRail({ title, items }: { title: string; items: Poster[] }) {
+export function PosterRail({
+  title,
+  items,
+  headingClassName = "uppercase tracking-wide",
+}: {
+  title: string;
+  items: Poster[];
+  headingClassName?: string;
+}) {
   return (
     <section className="py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <h2 className="mb-4 text-2xl uppercase tracking-wide sm:text-3xl">{title}</h2>
+        <h2 className={`mb-4 text-2xl sm:text-3xl ${headingClassName}`}>{title}</h2>
         <div className="rail-scroll">
           {items.map((item) => (
             <article
