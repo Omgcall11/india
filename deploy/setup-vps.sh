@@ -6,7 +6,8 @@ set -euo pipefail
 
 APP_DIR="/var/www/sakura-jp.wiki"
 REPO_URL="${REPO_URL:-https://github.com/Omgcall11/india.git}"
-BRANCH="${BRANCH:-main}"
+BRANCH="${BRANCH:-cursor/unpack-lovable-project-c1f0}"
+SSL_DIR="/etc/ssl/sakura-jp.wiki"
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "Run as root: sudo bash deploy/setup-vps.sh" >&2
@@ -15,20 +16,29 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y nginx git curl ca-certificates
+apt-get install -y nginx git curl ca-certificates openssl
 
 if ! command -v node >/dev/null 2>&1; then
   curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
   apt-get install -y nodejs
 fi
 
-mkdir -p "${APP_DIR}"
+mkdir -p "${APP_DIR}" "${SSL_DIR}"
 if [[ ! -d "${APP_DIR}/.git" ]]; then
   git clone --branch "${BRANCH}" "${REPO_URL}" "${APP_DIR}"
 else
   git -C "${APP_DIR}" fetch origin
   git -C "${APP_DIR}" checkout "${BRANCH}"
   git -C "${APP_DIR}" pull --ff-only origin "${BRANCH}"
+fi
+
+if [[ ! -f "${SSL_DIR}/origin.crt" || ! -f "${SSL_DIR}/origin.key" ]]; then
+  openssl req -x509 -nodes -newkey rsa:2048 \
+    -keyout "${SSL_DIR}/origin.key" \
+    -out "${SSL_DIR}/origin.crt" \
+    -days 3650 \
+    -subj "/CN=sakura-jp.wiki"
+  chmod 600 "${SSL_DIR}/origin.key"
 fi
 
 cd "${APP_DIR}"
@@ -41,13 +51,17 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t
 systemctl reload nginx
 
+if command -v ufw >/dev/null 2>&1; then
+  ufw allow 80/tcp >/dev/null 2>&1 || true
+  ufw allow 443/tcp >/dev/null 2>&1 || true
+fi
+
 install -m 644 "${APP_DIR}/deploy/streamone.service" /etc/systemd/system/streamone.service
 systemctl daemon-reload
 systemctl enable --now streamone.service
 systemctl restart streamone.service
 
 echo
-echo "App is proxied at http://sakura-jp.wiki"
-echo "Enable HTTPS:"
-echo "  sudo apt-get install -y certbot python3-certbot-nginx"
-echo "  sudo certbot --nginx -d sakura-jp.wiki -d www.sakura-jp.wiki"
+echo "Origin is listening on :80 and :443 (needed because Cloudflare proxies HTTPS)."
+echo "In Cloudflare: SSL/TLS → Overview → set mode to Full (not Full strict unless you install an Origin CA cert)."
+echo "Open firewall if needed: sudo ufw allow 80/tcp && sudo ufw allow 443/tcp"
